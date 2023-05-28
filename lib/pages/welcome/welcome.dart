@@ -1,11 +1,13 @@
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:e_learning_app/welcome/bloc/welcome_bloc.dart';
-import 'package:e_learning_app/welcome/bloc/welcome_events.dart';
-import 'package:e_learning_app/welcome/bloc/welcome_states.dart';
+import 'package:e_learning_app/common/values/colors.dart';
+import 'package:e_learning_app/pages/welcome/bloc/welcome_events.dart';
+import 'package:e_learning_app/pages/welcome/bloc/welcome_states.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'bloc/welcome_bloc.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -15,6 +17,7 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+  PageController pageController = PageController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,6 +35,7 @@ class _WelcomeState extends State<Welcome> {
                   state.page = value;
                   BlocProvider.of<WelComeBlocs>(context).add(WelComeEvents());
                 },
+                controller: pageController,
                 children: [
                   _page(
                       1,
@@ -63,8 +67,8 @@ class _WelcomeState extends State<Welcome> {
                     position: state.page,
                     mainAxisAlignment: MainAxisAlignment.center,
                     decorator: DotsDecorator(
-                        color: Colors.blueGrey,
-                        activeColor: Colors.black,
+                        color: AppColors.primaryThreeElementText,
+                        activeColor: AppColors.primaryElement,
                         size: Size.square(8),
                         activeSize: Size(15, 8),
                         activeShape: RoundedRectangleBorder(
@@ -84,11 +88,11 @@ class _WelcomeState extends State<Welcome> {
         SizedBox(
           width: 345.w,
           height: 345.h,
-          child: Image.asset(imagePath),
+          child: Image.asset(imagePath, fit: BoxFit.cover,),
         ),
         Text(title,
             style: TextStyle(
-                color: Colors.black,
+                color: AppColors.primaryText,
                 fontSize: 24.sp,
                 fontWeight: FontWeight.normal)),
         SizedBox(height: 20.h),
@@ -97,30 +101,40 @@ class _WelcomeState extends State<Welcome> {
           width: 375.w,
           child: Text(subtitle,
               style: TextStyle(
-                  color: Colors.black.withOpacity(0.5),
+                  color: AppColors.primarySecondaryElementText,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.normal)),
         ),
-        Container(
-          margin: EdgeInsets.only(top: 100.h, left: 24.w, right: 24.w),
-          width: 325.w,
-          height: 50.h,
-          decoration: BoxDecoration(
-              color: Colors.blueGrey,
-              borderRadius: BorderRadius.circular(15.w),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                    offset: Offset(0, 1)),
-              ]),
-          child: Center(
-            child: Text(btnName,
-                style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal)),
+        GestureDetector(
+          onTap: (){
+            if(index<3){
+              pageController.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.linear);
+            }else{
+              // Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
+              Navigator.of(context).pushNamedAndRemoveUntil('signIn', (route) => false );
+            }
+          },
+          child: Container(
+            margin: EdgeInsets.only(top: 100.h, left: 24.w, right: 24.w),
+            width: 325.w,
+            height: 50.h,
+            decoration: BoxDecoration(
+                color: AppColors.primaryElement,
+                borderRadius: BorderRadius.circular(15.w),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: Offset(0, 1)),
+                ]),
+            child: Center(
+              child: Text(btnName,
+                  style: TextStyle(
+                      fontSize: 16.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal)),
+            ),
           ),
         )
       ],

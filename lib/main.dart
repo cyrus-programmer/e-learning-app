@@ -1,12 +1,13 @@
 import 'package:e_learning_app/app_bloc.dart';
 import 'package:e_learning_app/app_states.dart';
-import 'package:e_learning_app/welcome/bloc/welcome_bloc.dart';
-import 'package:e_learning_app/welcome/welcome.dart';
+import 'package:e_learning_app/pages/welcome/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_events.dart';
+import 'pages/sign_in/signin.dart';
+import 'pages/welcome/bloc/welcome_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,16 +19,28 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => WelComeBlocs(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (context) => WelComeBlocs()),
+        BlocProvider(
+            create: (context) => AppBlocs()),
+      ],
       child: ScreenUtilInit(builder: (context, child) {
         return MaterialApp(
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+          appBarTheme: const AppBarTheme(
+            elevation: 0,
+            backgroundColor: Colors.white
+          )
           ),
-          home: Welcome(),
+          home: const Welcome(),
+          routes: {
+            'myHomePage': (context) => const MyHomePage(),
+            "signIn":(context)=> const SignIn(),
+          },
         );
       }),
     );
@@ -63,12 +76,14 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             FloatingActionButton(
+              heroTag: "Float-increment",
               onPressed: () =>
                   BlocProvider.of<AppBlocs>(context).add(Increment()),
               tooltip: 'Increment',
               child: const Icon(Icons.add),
             ),
             FloatingActionButton(
+              heroTag: "Float-Decrement",
               onPressed: () =>
                   BlocProvider.of<AppBlocs>(context).add(Decrement()),
               tooltip: 'Decrement',
