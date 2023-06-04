@@ -1,5 +1,9 @@
 import 'package:e_learning_app/app_bloc.dart';
 import 'package:e_learning_app/app_states.dart';
+import 'package:e_learning_app/common/values/colors.dart';
+import 'package:e_learning_app/pages/bloc_providers.dart';
+import 'package:e_learning_app/pages/register/register.dart';
+import 'package:e_learning_app/pages/sign_in/bloc/signin_bloc.dart';
 import 'package:e_learning_app/pages/welcome/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,8 +12,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_events.dart';
 import 'pages/sign_in/signin.dart';
 import 'pages/welcome/bloc/welcome_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -20,18 +27,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-            create: (context) => WelComeBlocs()),
-        BlocProvider(
-            create: (context) => AppBlocs()),
-      ],
+      providers: AppBlocProvider.allBlocProviders,
       child: ScreenUtilInit(builder: (context, child) {
         return MaterialApp(
-          title: 'Flutter Demo',
+          title: 'E learning App',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+
           appBarTheme: const AppBarTheme(
+            iconTheme: IconThemeData(
+              color: AppColors.primaryText
+            ),
             elevation: 0,
             backgroundColor: Colors.white
           )
@@ -40,6 +46,7 @@ class MyApp extends StatelessWidget {
           routes: {
             'myHomePage': (context) => const MyHomePage(),
             "signIn":(context)=> const SignIn(),
+            'register':(context)=> const Register()
           },
         );
       }),
@@ -54,7 +61,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Bloc State Management"),
+          title: const Text("Bloc State Management"),
         ),
         body: Center(
           child: BlocBuilder<AppBlocs, AppState>(

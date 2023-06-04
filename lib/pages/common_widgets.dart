@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 //Creating AppBar here so that we can modify it.
-AppBar buildAppBar() {
+AppBar buildAppBar(String title) {
   return AppBar(
-    title: Center(
-      child: Text("Login",
-          style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.normal,
-              color: AppColors.primaryText)),
-    ),
+    titleTextStyle:  TextStyle(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.normal,
+        color: AppColors.primaryText),
+    title: Text(title,
+        ),
     bottom: PreferredSize(
       preferredSize: const Size.fromHeight(1.0),
       child: Container(
@@ -110,7 +109,7 @@ Widget forgotPassword() {
     height: 44.h,
     child: Text("Forgot Password?",
         style: TextStyle(
-          color: AppColors.primaryText,
+            color: AppColors.primaryText,
             decoration: TextDecoration.underline,
             decorationColor: AppColors.primaryText,
             fontSize: 12.sp)),
